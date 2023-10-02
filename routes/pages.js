@@ -10,4 +10,4 @@ router.get('/register', (req, res) => {
     res.render('register');
 });
 
-modules.exports = router;
+module.exports = router;

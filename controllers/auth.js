@@ -14,14 +14,14 @@ exports.register = (req, res) => {
 
     const {name, email, password, passwordConfirm} = req.body;
 
-    db.query('SELECT email FROM users WHERE email = ?', [email], async(error, results) => {
+    db.query('SELECT email FROM user WHERE email = ?', [email], async(error, results) => {
         if(error) {
             console.log(error);
         }
-        if(results.length > 0) {
+        if( results > 0 ) {
             return res.render('register', {
                 message: 'That email is already in use'
-            });
+            })
         } else if( password !== passwordConfirm) {
             return res.render('register', {
                 message: 'Passwor do not match'
@@ -30,6 +30,17 @@ exports.register = (req, res) => {
 
         let hashedPassword = await bcrypt.hash(password, 8);
         console.log(hashedPassword);
+
+        db.query('INSERT INTO user SET? ', {name: name, email: email, password: hashedPassword}, (error, results) => {
+            if(error) {
+                console.log(error);
+            } else {
+                console.log(results);
+                return res.render('register', {
+                    message: 'User registered'
+                });
+            }
+        })
     }); 
 
 }
